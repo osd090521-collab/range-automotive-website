@@ -730,45 +730,44 @@
 </script>
 
 <script>
-  // Typewriter effect on hero headline
+  // Typewriter effect on hero headline (mobile + desktop)
   (function initTypewriter(){
     const h1 = document.querySelector('.hero h1');
     if(!h1) return;
 
     const prefersNoMotion = matchMedia('(prefers-reduced-motion:reduce)').matches;
     if(prefersNoMotion){
+      // Skip animation if user prefers reduced motion
       h1.classList.add('typed-complete');
       return;
     }
 
-    // Get the text content and special words marked with <em>
-    const originalHTML = h1.innerHTML;
-    const plainText = h1.textContent.trim();
-
-    // Clear and prepare for typing
-    h1.innerHTML = '';
-    h1.style.minHeight = '1.2em';
-
-    // Type each character with animation
-    let charIndex = 0;
-    let delay = 0;
-
-    for(let i = 0; i < plainText.length; i++){
-      const char = plainText[i];
-      const span = document.createElement('span');
-      span.className = 'typed-char';
-      span.textContent = char;
-      span.style.animationDelay = (delay) + 'ms';
-
-      h1.appendChild(span);
-      delay += 35; // 35ms between each character
-    }
-
-    // After all characters are typed, add shine and mark as complete
-    const totalDuration = delay + 100; // Wait for last char to fade in
+    // Wait for DOM to be fully ready
     setTimeout(() => {
-      h1.classList.add('typed-complete');
-    }, totalDuration);
+      const plainText = h1.textContent.trim();
+
+      // Clear and prepare for typing
+      h1.innerHTML = '';
+      h1.style.minHeight = '1.2em';
+
+      // Type each character with slower animation (60ms between chars)
+      let delay = 0;
+      for(let i = 0; i < plainText.length; i++){
+        const char = plainText[i];
+        const span = document.createElement('span');
+        span.className = 'typed-char';
+        span.textContent = char;
+        span.style.animationDelay = (delay) + 'ms';
+        h1.appendChild(span);
+        delay += 60; // Slower: 60ms between each character (was 35ms)
+      }
+
+      // After all characters are typed, add shine effect
+      const totalDuration = delay + 150;
+      setTimeout(() => {
+        h1.classList.add('typed-complete');
+      }, totalDuration);
+    }, 100); // Wait 100ms for page to fully load before starting
   })();
 
   const services=[
