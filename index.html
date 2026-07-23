@@ -29,6 +29,7 @@
     -webkit-font-smoothing:antialiased; line-height:1.6; overflow-x:hidden;
   }
   h1,h2,h3{font-family:var(--disp); color:var(--white); line-height:1.02; margin:0; letter-spacing:-.01em; font-weight:800;}
+  .hero h1{position:relative}
   a{color:inherit; text-decoration:none}
   img{max-width:100%; display:block}
   ::selection{background:var(--red); color:#fff}
@@ -272,9 +273,14 @@
   .reveal.in{opacity:1; transform:none}
 
 
-  /* Typing effect on hero headline */
-  .typing-text{display:inline; animation:typingBlink .7s infinite}
-  @keyframes typingBlink{0%,49%{opacity:1} 50%,100%{opacity:0}}
+  /* Typewriter effect styles */
+  .hero h1 {min-height:1.2em}
+  .hero h1 .typed-char{display:inline; opacity:0; animation:charFade .08s ease-out forwards}
+  @keyframes charFade{to{opacity:1}}
+
+  /* Shine effect after typing completes */
+  .hero h1.typed-complete::before{content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.12) 50%,transparent); width:100%; animation:typingShine 1.2s ease-in-out forwards}
+  @keyframes typingShine{0%{transform:translateX(-100%)} 100%{transform:translateX(100%)}}
 
   /* Side-slide animations for cards */
   @keyframes slideFromLeft{0%{transform:translateX(-52px); opacity:0} 100%{transform:translateX(0); opacity:1}}
@@ -685,17 +691,53 @@
 </script>
 
 <script>
-  // Add typing cursor animation to hero headline
-  (function initTyping(){
+  // Typewriter effect on hero headline
+  (function initTypewriter(){
     const h1 = document.querySelector('.hero h1');
-    if(h1 && !matchMedia('(prefers-reduced-motion:reduce)').matches){
-      const text = h1.innerHTML;
-      h1.innerHTML = text + '<span class="typing-text">|</span>';
-      setTimeout(() => {
-        const cursor = h1.querySelector('.typing-text');
-        if(cursor) cursor.remove();
-      }, 3600); // Remove cursor after 3.6s
+    if(!h1) return;
+
+    const prefersNoMotion = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+    // Store original HTML and convert to plain text for typing
+    const originalHTML = h1.innerHTML;
+    const plainText = h1.textContent;
+
+    if(prefersNoMotion){
+      // Skip animation if reduced motion is on
+      h1.classList.add('typed-complete');
+      return;
     }
+
+    // Clear the h1 and prepare for typing
+    h1.innerHTML = '';
+    let charIndex = 0;
+
+    function typeNextChar(){
+      if(charIndex < plainText.length){
+        const char = plainText[charIndex];
+        const span = document.createElement('span');
+        span.className = 'typed-char';
+        span.textContent = char;
+
+        // Calculate staggered animation delay
+        span.style.animationDelay = (charIndex * 35) + 'ms';
+
+        h1.appendChild(span);
+        charIndex++;
+
+        // Continue typing
+        typeNextChar();
+      } else {
+        // Typing complete - restore original HTML structure (with em tags) and add shine
+        setTimeout(() => {
+          h1.innerHTML = originalHTML;
+          h1.classList.add('typed-complete');
+        }, 100);
+      }
+    }
+
+    // Start typing after page load
+    typeNextChar();
   })();
 
   const services=[
