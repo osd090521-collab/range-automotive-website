@@ -111,10 +111,21 @@
   .hero h1{font-size:clamp(2.7rem,7vw,5.4rem); font-weight:900; text-transform:uppercase; max-width:14ch}
   .hero h1 em{font-style:normal; color:var(--red)}
   .hero p.lead{font-size:clamp(1.05rem,2.2vw,1.3rem); color:var(--steel-2); max-width:52ch; margin:22px 0 34px}
-  .hero-cta{display:flex; gap:14px; flex-wrap:wrap}
-  .hero-strip{display:flex; gap:26px; flex-wrap:wrap; margin-top:44px; padding-top:26px; border-top:1px solid var(--line)}
-  .hero-strip div{font-size:.82rem; color:var(--steel)}
-  .hero-strip b{display:block; font-family:var(--disp); font-size:1.2rem; color:var(--chrome); font-weight:800; letter-spacing:.01em}
+  .hero-cta{display:flex; gap:18px; flex-wrap:wrap}
+  .hero-cta .btn{padding:18px 32px; font-size:1.05rem; min-height:54px}
+  .hero-strip{display:flex; gap:40px; flex-wrap:wrap; margin-top:54px; padding-top:32px; border-top:1px solid var(--line); align-items:center}
+  .hero-strip div{font-size:.9rem; color:var(--steel); display:flex; align-items:center; gap:12px}
+  .hero-strip svg{width:24px; height:24px; color:var(--red); flex:0 0 auto}
+  .hero-strip b{display:block; font-family:var(--disp); font-size:1.4rem; color:var(--chrome); font-weight:800; letter-spacing:.01em; line-height:1}
+
+  /* Trust badges */
+  .hero-badges{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:48px}
+  .badge{display:flex; align-items:center; gap:16px; background:rgba(196,30,42,.08); border:1px solid rgba(196,30,42,.25); border-radius:16px; padding:18px 22px; transition:all .3s}
+  .badge:hover{background:rgba(196,30,42,.14); border-color:rgba(196,30,42,.4); transform:translateY(-2px)}
+  .badge-icon{font-size:1.8rem; flex:0 0 auto}
+  .badge-text{display:flex; flex-direction:column; gap:4px}
+  .badge-text b{font-family:var(--disp); font-size:.95rem; color:#fff; font-weight:700}
+  .badge-text span{font-size:.82rem; color:var(--steel); display:block}
 
   /* premium service marquee */
   .marquee{position:relative; z-index:2; background:var(--ink); border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; padding:20px 0}
@@ -304,6 +315,7 @@
     .svc-grid{grid-template-columns:repeat(2,1fr)}
     .tst-grid{grid-template-columns:1fr}
     .partners-grid{grid-template-columns:repeat(2,1fr)}
+    .hero-badges{grid-template-columns:1fr}
     .about-media{order:-1; max-height:340px}
     .hero-watermark{width:72%; right:-14%; opacity:.12}
     .foot-inner{gap:36px 48px}
@@ -359,6 +371,17 @@
     .hero-neon i:nth-child(3){display:none}
     /* Fix 5 — opacity-only pulse on mobile; animating filter:blur() is not GPU-cheap */
     .hero-neon i{animation:neonPulseMobile 6s ease-in-out infinite}
+
+    /* Make hero CTA buttons bigger on mobile */
+    .hero-cta .btn{padding:16px 24px; font-size:1rem; min-height:50px; width:100%}
+    .hero-strip{gap:20px; margin-top:36px}
+    .hero-strip div{font-size:.85rem; flex-direction:column; align-items:flex-start}
+    .hero-strip b{font-size:1.2rem}
+    .hero-badges{gap:14px; margin-top:32px}
+    .badge{padding:14px 16px; gap:12px}
+    .badge-icon{font-size:1.4rem}
+    .badge-text b{font-size:.9rem}
+    .badge-text span{font-size:.76rem}
 
     /* type + spacing */
     .hero-cta,.mobile-band .hero-cta,.booking .acts{flex-direction:column; align-items:stretch}
@@ -441,10 +464,26 @@
       <a href="https://wa.me/447563757759?text=Hi%20The%20Range%20Automotive%2C%20I%27d%20like%20to%20book%20my%20car%20in." target="_blank" rel="noopener" class="btn btn-wa">Book on WhatsApp</a>
     </div>
     <div class="hero-strip">
-      <div><b>10+ yrs</b>Fully qualified</div>
-      <div><b>All fuels</b>Petrol · Diesel · Hybrid · EV</div>
-      <div><b>Mobile</b>We come to you</div>
-      <div><b>14+</b>Repair specialisms</div>
+      <div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span><b>10+ yrs</b>Fully qualified</span></div>
+      <div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span><b>All fuels</b>Petrol · Diesel · Hybrid · EV</span></div>
+      <div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span><b>Mobile</b>We come to you</span></div>
+      <div><svg fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span><b>14+</b>Repair specialisms</span></div>
+    </div>
+
+    <!-- Trust badges -->
+    <div class="hero-badges">
+      <div class="badge">
+        <span class="badge-icon">✓</span>
+        <span class="badge-text"><b>Fully Insured</b>All work covered</span>
+      </div>
+      <div class="badge">
+        <span class="badge-icon">⚡</span>
+        <span class="badge-text"><b>Same Day Service</b>Where possible</span>
+      </div>
+      <div class="badge">
+        <span class="badge-icon">🔧</span>
+        <span class="badge-text"><b>Expert Diagnostics</b>State-of-the-art</span>
+      </div>
     </div>
   </div>
 </section>
