@@ -150,6 +150,8 @@
   /* Services */
   .svc-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
   .svc{background:var(--ink); border:1px solid var(--line); border-radius:14px; padding:22px; transition:transform .2s,border-color .2s,background .2s; position:relative; overflow:hidden}
+  .svc::before{content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.15) 50%,transparent); transform:translateX(-100%); pointer-events:none}
+  .svc.reveal.in::before{animation:shine 2s ease-in-out 1}
   .svc::after{content:""; position:absolute; left:0; top:0; height:100%; width:3px; background:var(--red); transform:scaleY(0); transform-origin:top; transition:transform .25s}
   .svc:hover{transform:translateY(-4px); border-color:rgba(196,30,42,.5); background:var(--ink-2)}
   .svc:hover::after{transform:scaleY(1)}
@@ -168,7 +170,9 @@
 
   /* Testimonials */
   .tst-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
-  .tst{background:var(--ink); border:1px solid var(--line); border-radius:14px; padding:24px; display:flex; flex-direction:column; gap:16px}
+  .tst{background:var(--ink); border:1px solid var(--line); border-radius:14px; padding:24px; display:flex; flex-direction:column; gap:16px; position:relative; overflow:hidden}
+  .tst::before{content:""; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.15) 50%,transparent); transform:translateX(-100%); pointer-events:none}
+  .tst.reveal.in::before{animation:shine 2s ease-in-out 1}
   .tst .stars{color:var(--red); letter-spacing:2px; font-size:.95rem}
   .tst p{margin:0; font-size:.93rem; color:var(--steel-2); line-height:1.6}
   .tst .who{display:flex; align-items:center; gap:11px; margin-top:auto}
@@ -246,9 +250,26 @@
   .wa-widget:focus-visible{outline:2px solid var(--chrome); outline-offset:2px}
   .wa-widget svg{width:30px; height:30px; fill:#fff}
 
-  /* Reveal */
-  .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  /* Reveal — much slower, ultra-smooth animations */
+  .reveal{opacity:0; transform:translateY(26px); transition:opacity 2.4s ease-out,transform 2.4s ease-out}
   .reveal.in{opacity:1; transform:none}
+
+
+  /* Typing effect on hero headline */
+  .typing-text{display:inline; animation:typingBlink .7s infinite}
+  @keyframes typingBlink{0%,49%{opacity:1} 50%,100%{opacity:0}}
+
+  /* Shining/glossy effect on cards when they appear */
+  @keyframes shine{0%{transform:translateX(-100%)} 100%{transform:translateX(100%)}}
+
+  /* Floating/pop-in effect for cards on reveal */
+  @keyframes floatIn{0%{opacity:0; transform:translateY(26px)} 100%{opacity:1; transform:none}}
+  .svc, .tst{animation:floatIn 2.4s ease-out forwards; opacity:0}
+  .svc.reveal.in, .tst.reveal.in{animation:none; opacity:1}
+
+  /* Micro hover effects on cards */
+  .svc:hover, .tst:hover{transform:translateY(-6px); box-shadow:0 12px 28px -8px rgba(212,34,48,.35)}
+  .contact-list a:hover{box-shadow:0 8px 20px -6px var(--red-glow)}
 
   @media (max-width:980px){
     .about-grid,.mobile-band,.contact-grid,.visit-grid{grid-template-columns:1fr}
@@ -269,11 +290,24 @@
     .svc-grid{grid-template-columns:1fr}
     body{padding-bottom:0}
 
-    /* Side-slide cards: services and reviews slide in from alternating sides on scroll */
+    /* Side-slide cards: services and reviews slide in from alternating sides, ultra-smooth */
     .sheets{overflow-x:clip}
-    .svc-grid .reveal, .tst-grid .reveal{transform:translateX(-46px); opacity:0}
-    .svc-grid .reveal:nth-child(even), .tst-grid .reveal:nth-child(even){transform:translateX(46px)}
+    .svc-grid .reveal, .tst-grid .reveal{transform:translateX(-58px); opacity:0; transition:opacity 2.8s ease-out, transform 2.8s ease-out}
+    .svc-grid .reveal:nth-child(even), .tst-grid .reveal:nth-child(even){transform:translateX(58px)}
     .svc-grid .reveal.in, .tst-grid .reveal.in{transform:none; opacity:1}
+    /* Progressive stagger: 240ms between each card for cascading effect */
+    .svc-grid .reveal:nth-child(1) { transition-delay: 0ms }
+    .svc-grid .reveal:nth-child(2) { transition-delay: 240ms }
+    .svc-grid .reveal:nth-child(3) { transition-delay: 480ms }
+    .svc-grid .reveal:nth-child(4) { transition-delay: 720ms }
+    .svc-grid .reveal:nth-child(5) { transition-delay: 960ms }
+    .svc-grid .reveal:nth-child(6) { transition-delay: 1200ms }
+    .tst-grid .reveal:nth-child(1) { transition-delay: 0ms }
+    .tst-grid .reveal:nth-child(2) { transition-delay: 240ms }
+    .tst-grid .reveal:nth-child(3) { transition-delay: 480ms }
+    .tst-grid .reveal:nth-child(4) { transition-delay: 720ms }
+    .tst-grid .reveal:nth-child(5) { transition-delay: 960ms }
+    .tst-grid .reveal:nth-child(6) { transition-delay: 1200ms }
 
     /* Fix 1 — drop the sticky sheet-stack on mobile: normal flow, no shadow/blur re-compositing.
        This was the direct cause of the delayed/laggy scroll reported on a real phone. Desktop keeps
@@ -595,6 +629,19 @@
 </script>
 
 <script>
+  // Add typing cursor animation to hero headline
+  (function initTyping(){
+    const h1 = document.querySelector('.hero h1');
+    if(h1 && !matchMedia('(prefers-reduced-motion:reduce)').matches){
+      const text = h1.innerHTML;
+      h1.innerHTML = text + '<span class="typing-text">|</span>';
+      setTimeout(() => {
+        const cursor = h1.querySelector('.typing-text');
+        if(cursor) cursor.remove();
+      }, 3600); // Remove cursor after 3.6s
+    }
+  })();
+
   const services=[
     ["DX","Computer Diagnosis","Advanced diagnostics to detect and fix issues fast — keep your vehicle running efficiently with expert analysis."],
     ["BR","Brakes","Reliable brake repair and maintenance. From pads to discs, we ensure top-notch braking performance."],
