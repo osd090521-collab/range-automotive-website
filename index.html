@@ -235,9 +235,16 @@
   .copy{margin-top:34px; padding-top:20px; border-top:1px solid var(--line); font-size:.8rem; color:var(--steel); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px}
 
   /* Sticky mobile call bar */
-  .callbar{position:fixed; left:0; right:0; bottom:0; z-index:70; display:none; gap:10px; padding:12px 14px calc(12px + env(safe-area-inset-bottom));
-    background:rgba(12,13,16,.94); backdrop-filter:blur(14px); border-top:1px solid var(--line)}
-  .callbar .btn{flex:1}
+  /* Floating WhatsApp widget (replaces old .callbar bottom bar) */
+  .wa-widget{position:fixed; right:18px; bottom:calc(18px + env(safe-area-inset-bottom)); z-index:80;
+    width:58px; height:58px; border-radius:50%;
+    background:linear-gradient(180deg,#25D366,#128C4B);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 24px -6px rgba(18,140,75,.55), 0 2px 8px rgba(0,0,0,.35);
+    transition:transform .2s; text-decoration:none}
+  .wa-widget:hover{transform:scale(1.06)}
+  .wa-widget:focus-visible{outline:2px solid var(--chrome); outline-offset:2px}
+  .wa-widget svg{width:30px; height:30px; fill:#fff}
 
   /* Reveal */
   .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
@@ -259,9 +266,14 @@
     .nav-links.open{display:flex; position:absolute; top:72px; left:0; right:0; flex-direction:column; gap:0;
       background:rgba(12,13,16,.98); backdrop-filter:none; border-bottom:1px solid var(--line); padding:8px 0}
     .nav-links.open a{padding:15px 24px; width:100%; border-bottom:1px solid var(--line)}
-    .callbar{display:flex; background:rgba(12,13,16,.97); backdrop-filter:none}
     .svc-grid{grid-template-columns:1fr}
     body{padding-bottom:0}
+
+    /* Side-slide cards: services and reviews slide in from alternating sides on scroll */
+    .sheets{overflow-x:clip}
+    .svc-grid .reveal, .tst-grid .reveal{transform:translateX(-46px); opacity:0}
+    .svc-grid .reveal:nth-child(even), .tst-grid .reveal:nth-child(even){transform:translateX(46px)}
+    .svc-grid .reveal.in, .tst-grid .reveal.in{transform:none; opacity:1}
 
     /* Fix 1 — drop the sticky sheet-stack on mobile: normal flow, no shadow/blur re-compositing.
        This was the direct cause of the delayed/laggy scroll reported on a real phone. Desktop keeps
@@ -572,11 +584,10 @@
   </div>
 </footer>
 
-<!-- STICKY MOBILE CALL BAR -->
-<div class="callbar">
-  <a href="tel:+447563757759" class="btn btn-red">Call now</a>
-  <a href="https://wa.me/447563757759?text=Hi%2C%20I%27d%20like%20to%20book%20my%20car%20in." target="_blank" rel="noopener" class="btn btn-wa">WhatsApp</a>
-</div>
+<!-- FLOATING WHATSAPP WIDGET (Mobile) -->
+<a href="https://wa.me/447563757759?text=Hi%20The%20Range%20Automotive%2C%20I%27d%20like%20to%20book%20my%20car%20in." target="_blank" rel="noopener" class="wa-widget" aria-label="Chat on WhatsApp" title="Message us on WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.075-.124-.272-.198-.57-.347m-5.421-7.403h-.004c-2.182 0-4.365-.661-6.266-1.914-.408-.258-.893-.25-1.306.015-1.16.73-1.95 2.042-1.95 3.478 0 2.536 2.124 4.66 4.66 4.66 1.436 0 2.748-.79 3.478-1.95.265-.413.273-.898.015-1.306-1.253-1.9-1.914-4.084-1.914-6.266m12.787-2.227a12.002 12.002 0 0 0-16.96 16.96 11.95 11.95 0 0 0 1.869 1.505 12 12 0 0 0 15.091-15.091 11.95 11.95 0 0 0-1.505-1.869m-4.26 9.06c-.427-1.117-1.405-2.127-2.523-2.636-1.117-.51-2.345-.533-3.418-.087-1.073.446-1.946 1.325-2.396 2.442-.45 1.117-.427 2.345.087 3.418.513 1.073 1.392 1.946 2.509 2.396 1.117.45 2.345.427 3.418-.087 1.073-.514 1.946-1.392 2.396-2.509.45-1.117.427-2.345-.087-3.418z"/></svg>
+</a>
 
 <!-- LocalBusiness schema (so Google + AI search can read it) -->
 <script type="application/ld+json">
