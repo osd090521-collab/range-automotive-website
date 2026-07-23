@@ -697,47 +697,39 @@
     if(!h1) return;
 
     const prefersNoMotion = matchMedia('(prefers-reduced-motion:reduce)').matches;
-
-    // Store original HTML and convert to plain text for typing
-    const originalHTML = h1.innerHTML;
-    const plainText = h1.textContent;
-
     if(prefersNoMotion){
-      // Skip animation if reduced motion is on
       h1.classList.add('typed-complete');
       return;
     }
 
-    // Clear the h1 and prepare for typing
+    // Get the text content and special words marked with <em>
+    const originalHTML = h1.innerHTML;
+    const plainText = h1.textContent.trim();
+
+    // Clear and prepare for typing
     h1.innerHTML = '';
+    h1.style.minHeight = '1.2em';
+
+    // Type each character with animation
     let charIndex = 0;
+    let delay = 0;
 
-    function typeNextChar(){
-      if(charIndex < plainText.length){
-        const char = plainText[charIndex];
-        const span = document.createElement('span');
-        span.className = 'typed-char';
-        span.textContent = char;
+    for(let i = 0; i < plainText.length; i++){
+      const char = plainText[i];
+      const span = document.createElement('span');
+      span.className = 'typed-char';
+      span.textContent = char;
+      span.style.animationDelay = (delay) + 'ms';
 
-        // Calculate staggered animation delay
-        span.style.animationDelay = (charIndex * 35) + 'ms';
-
-        h1.appendChild(span);
-        charIndex++;
-
-        // Continue typing
-        typeNextChar();
-      } else {
-        // Typing complete - restore original HTML structure (with em tags) and add shine
-        setTimeout(() => {
-          h1.innerHTML = originalHTML;
-          h1.classList.add('typed-complete');
-        }, 100);
-      }
+      h1.appendChild(span);
+      delay += 35; // 35ms between each character
     }
 
-    // Start typing after page load
-    typeNextChar();
+    // After all characters are typed, add shine and mark as complete
+    const totalDuration = delay + 100; // Wait for last char to fade in
+    setTimeout(() => {
+      h1.classList.add('typed-complete');
+    }, totalDuration);
   })();
 
   const services=[
