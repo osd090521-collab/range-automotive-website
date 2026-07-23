@@ -220,6 +220,23 @@
   .coverage{margin-top:20px; padding-top:18px; border-top:1px solid var(--line); font-size:.9rem; color:var(--steel-2); display:flex; gap:10px; align-items:flex-start}
   .coverage svg{color:var(--red); flex:0 0 auto; margin-top:2px}
 
+  /* Trustpilot section */
+  .trustpilot{position:relative; z-index:2; background:var(--ink-1); border-top:1px solid var(--line); padding:76px 0}
+  .trustpilot .wrap{text-align:center}
+  .trustpilot h2{font-size:clamp(1.8rem,4vw,2.9rem); text-transform:uppercase; margin-bottom:16px}
+  .trustpilot-badge{display:inline-flex; align-items:center; gap:20px; background:var(--ink); border:1px solid var(--line); border-radius:var(--r); padding:28px 32px; margin:28px 0}
+  .trustpilot-stars{font-size:2.2rem; color:var(--red); letter-spacing:2px}
+  .trustpilot-text b{display:block; font-family:var(--disp); font-size:1.15rem; color:#fff; margin-top:6px}
+  .trustpilot-text small{display:block; color:var(--steel); font-size:.85rem; margin-top:4px}
+
+  /* Partners section */
+  .partners{position:relative; z-index:2; background:var(--ink); border-top:1px solid var(--line); padding:76px 0}
+  .partners .wrap{text-align:center}
+  .partners h2{font-size:clamp(1.8rem,4vw,2.9rem); text-transform:uppercase; margin-bottom:48px}
+  .partners-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:28px; align-items:center; max-width:900px; margin:0 auto}
+  .partner-logo{display:flex; align-items:center; justify-content:center; padding:24px; background:var(--ink-1); border:1px solid var(--line); border-radius:14px; height:120px; font-family:var(--disp); font-weight:800; font-size:.9rem; color:var(--steel-2); text-transform:uppercase; letter-spacing:.08em; transition:border-color .2s,background .2s}
+  .partner-logo:hover{border-color:rgba(196,30,42,.5); background:var(--ink-2)}
+
   /* Booking band */
   .booking{position:relative; z-index:2; background:
       radial-gradient(120% 140% at 85% 0%,rgba(212,34,48,.22),transparent 55%),var(--ink);
@@ -280,6 +297,7 @@
     .booking .wrap{flex-direction:column; align-items:flex-start}
     .svc-grid{grid-template-columns:repeat(2,1fr)}
     .tst-grid{grid-template-columns:1fr}
+    .partners-grid{grid-template-columns:repeat(2,1fr)}
     .about-media{order:-1; max-height:340px}
     .hero-watermark{width:72%; right:-14%; opacity:.12}
     .foot-inner{gap:36px 48px}
@@ -307,15 +325,6 @@
     .svc-grid .reveal:nth-child(5).reveal.in { animation-delay: 560ms }
     .svc-grid .reveal:nth-child(6).reveal.in { animation-delay: 700ms }
 
-    /* Testimonials: same pattern */
-    .tst-grid .reveal:nth-child(odd).reveal.in { animation: slideFromLeft 2.2s ease-out 1 forwards }
-    .tst-grid .reveal:nth-child(even).reveal.in { animation: slideFromRight 2.2s ease-out 1 forwards }
-    .tst-grid .reveal:nth-child(1).reveal.in { animation-delay: 0ms }
-    .tst-grid .reveal:nth-child(2).reveal.in { animation-delay: 140ms }
-    .tst-grid .reveal:nth-child(3).reveal.in { animation-delay: 280ms }
-    .tst-grid .reveal:nth-child(4).reveal.in { animation-delay: 420ms }
-    .tst-grid .reveal:nth-child(5).reveal.in { animation-delay: 560ms }
-    .tst-grid .reveal:nth-child(6).reveal.in { animation-delay: 700ms }
 
     /* Fix 1 — drop the sticky sheet-stack on mobile: normal flow, no shadow/blur re-compositing.
        This was the direct cause of the delayed/laggy scroll reported on a real phone. Desktop keeps
@@ -366,6 +375,11 @@
     /* contact/hours cards full-bleed on small screens */
     .panel{padding:24px}
     .contact-list a{padding:16px}
+
+    /* Trustpilot and Partners on mobile */
+    .trustpilot{padding:54px 0}
+    .trustpilot-badge{flex-direction:column; gap:14px}
+    .partners-grid{grid-template-columns:repeat(2,1fr); gap:16px}
   }
   @media (max-width:420px){
     .hero h1{font-size:2.5rem}
@@ -575,6 +589,40 @@
     </div>
   </section>
 </div>
+
+<!-- TRUSTPILOT SECTION -->
+<section class="trustpilot">
+  <div class="wrap">
+    <span class="eyebrow">Customer reviews</span>
+    <h2>Trusted &amp; rated</h2>
+    <div class="trustpilot-badge">
+      <div class="trustpilot-stars">★★★★★</div>
+      <div class="trustpilot-text">
+        <b>5.0 out of 5</b>
+        <small>Based on verified customer reviews</small>
+      </div>
+    </div>
+    <p style="color:var(--steel-2); max-width:60ch; margin:0 auto">We're proud of our track record for honest work, expert service and fair pricing. Every review comes from a real customer who trusted us with their vehicle.</p>
+  </div>
+</section>
+
+<!-- PARTNERS SECTION -->
+<section class="partners">
+  <div class="wrap">
+    <span class="eyebrow">Brands we work with</span>
+    <h2>Trusted by leading names</h2>
+    <div class="partners-grid">
+      <div class="partner-logo">BMW</div>
+      <div class="partner-logo">Mercedes</div>
+      <div class="partner-logo">Audi</div>
+      <div class="partner-logo">Ford</div>
+      <div class="partner-logo">Volkswagen</div>
+      <div class="partner-logo">Tesla</div>
+      <div class="partner-logo">Hyundai</div>
+      <div class="partner-logo">Nissan</div>
+    </div>
+  </div>
+</section>
 
 <!-- BOOKING BAND -->
 <section class="booking" id="book">
