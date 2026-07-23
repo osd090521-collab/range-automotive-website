@@ -97,6 +97,7 @@
   .hero-neon i:nth-child(2){top:13%; left:30%; width:52%; height:5px; background:linear-gradient(90deg,transparent,#ff3d6e,#ff9ecb,transparent); transform:rotate(-6deg); animation-delay:.6s}
   .hero-neon i:nth-child(3){top:2%; left:44%; width:40%; height:6px; background:linear-gradient(90deg,transparent,#5ef1ff,#c9f9ff,transparent); transform:rotate(-8deg); animation-delay:1.2s}
   @keyframes neonPulse{0%,100%{opacity:.55; filter:blur(6px)}50%{opacity:1; filter:blur(9px)}}
+  @keyframes neonPulseMobile{0%,100%{opacity:.55}50%{opacity:1}}
 
   /* Giant faded badge watermark, colour-fade through a gradient mask */
   .hero-watermark{position:absolute; z-index:0; top:50%; right:-6%; width:60%; max-width:820px; aspect-ratio:17/11.2; transform:translateY(-50%);
@@ -256,13 +257,30 @@
     .nav-burger{display:grid; place-items:center}
     header.nav .btn-red{display:none}
     .nav-links.open{display:flex; position:absolute; top:72px; left:0; right:0; flex-direction:column; gap:0;
-      background:rgba(12,13,16,.97); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); padding:8px 0}
+      background:rgba(12,13,16,.98); backdrop-filter:none; border-bottom:1px solid var(--line); padding:8px 0}
     .nav-links.open a{padding:15px 24px; width:100%; border-bottom:1px solid var(--line)}
-    .callbar{display:flex}
-    .sheet{border-radius:26px 26px 0 0; padding:64px 0}
-    .hero{padding:104px 0 120px; min-height:auto}
+    .callbar{display:flex; background:rgba(12,13,16,.97); backdrop-filter:none}
     .svc-grid{grid-template-columns:1fr}
     body{padding-bottom:0}
+
+    /* Fix 1 — drop the sticky sheet-stack on mobile: normal flow, no shadow/blur re-compositing.
+       This was the direct cause of the delayed/laggy scroll reported on a real phone. Desktop keeps
+       the sheet-scroll stacking effect unchanged; only this breakpoint simplifies it. */
+    .sheet{position:relative; top:auto; border-radius:26px 26px 0 0; padding:64px 0; box-shadow:none}
+    .sheet::before{display:none}
+    header.nav.scrolled{backdrop-filter:none; background:rgba(12,13,16,.96)}
+    .btn-ghost{backdrop-filter:none; background:rgba(255,255,255,.08)}
+    .panel{backdrop-filter:none; background:#14171D}
+
+    /* Fix 2 — kill the continuous hero zoom/pan drift: this was the "too zoomed in" cause */
+    .hero-photo{animation:none; transform:scale(1.02)}
+
+    /* Fix 4 — decorative fixed layers become absolute: removes forced compositing during scroll.
+       body needs position:relative so these size to full document height, not just one screen. */
+    body{position:relative}
+    .bg-field,.bg-grid,.grain{position:absolute}
+
+    .hero{padding:104px 0 120px; min-height:auto}
 
     /* badge + watermark + neon tuned for phone */
     .brand img{height:40px}
@@ -270,6 +288,8 @@
     .hero-badge{height:74px; margin-bottom:18px}
     .hero-watermark{display:none}
     .hero-neon i:nth-child(3){display:none}
+    /* Fix 5 — opacity-only pulse on mobile; animating filter:blur() is not GPU-cheap */
+    .hero-neon i{animation:neonPulseMobile 6s ease-in-out infinite}
 
     /* type + spacing */
     .hero-cta,.mobile-band .hero-cta,.booking .acts{flex-direction:column; align-items:stretch}
@@ -615,8 +635,7 @@
   menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{menu.classList.remove('open');burger.setAttribute('aria-expanded','false');}));
   // Reveal
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.14});
-  const arm=()=>document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-  arm();new MutationObserver(arm).observe(document.body,{subtree:true,childList:true});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 </script>
 </body>
 </html>
